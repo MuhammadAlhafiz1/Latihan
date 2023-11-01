@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Buku Pemweb</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fa0ac6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #book-list {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        #book-list h2 {
+            color: #333;
+        }
+
+        #book-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #book-form input[type="text"], #search-input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        #book-form button, #search-button, #reset-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #book-form button, #search-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        #reset-button {
+            background-color: #ff5733;
+            color: #fff;
+        }
+
+        #book-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #book-table th, #book-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        #book-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="book-list">
+        <h2>Daftar Buku Pemweb</h2>
+        <form id="book-form">
+            <input type="text" id="title" placeholder="Tambah judul buku...">
+            <button type="button" onclick="addBook()">Tambah</button>
+            <input type="text" id="search-input" placeholder="Masukkan judul buku..." oninput="searchBooks">
+            <button type="button" id="search-button" onclick="searchBooks">Cari</button>
+            <button type="button" id="reset-button" onclick="resetSearch">Reset</button>
+        </form>
+        <table id="book-table">
+            <thead>
+                <tr>
+                    <th>Daftar Buku Pemweb</th>
+                </tr>
+            </thead>
+            <tbody id="book-list-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const bookList = document.getElementById('book-list');
+        const titleInput = document.getElementById('title');
+        const bookListBody = document.getElementById('book-list-body');
+        const searchInput = document.getElementById('search-input');
+
+        const books = [];
+
+        function addBook() {
+            const title = titleInput.value;
+            if (title) {
+                books.push({ title });
+                displayBooks();
+                titleInput.value = '';
+            }
+        }
+
+        function deleteBook(index) {
+            books.splice(index, 1);
+            displayBooks();
+        }
+
+        function displayBooks() {
+            bookListBody.innerHTML = '';
+            for (let i = 0; i < books.length; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${books[i].title} <button type="button" onclick="deleteBook(${i})">Hapus</button></td>
+                `;
+                bookListBody.appendChild(row);
+            }
+        }
+
+        function searchBooks() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredBooks = books.filter(book => {
+                return book.title.toLowerCase().includes(searchTerm);
+            });
+            bookListBody.innerHTML = '';
+            filteredBooks.forEach(book => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${book.title} <button type="button" onclick="deleteBook(${books.indexOf(book)})">Hapus</button></td>
+                `;
+                bookListBody.appendChild(row);
+            });
+        }
+
+        function resetSearch() {
+            searchInput.value = '';
+            displayBooks();
+        }
+    </script>
+</body>
+</html>
